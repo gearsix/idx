@@ -16,10 +16,16 @@ extern "C" {
 	#define IDX_WIN
 	typedef __int64 idx_t;
 
-/* Unknown system!
+/* Unknown system, check if we at least have C99 */
+#elif (__STDC_VERSION__ >= 199901L)
+	#include <stdint.h>
+	#define IDX_UKWNC99
+	typedef uint_least64_t idx_t;
+
+/* Unknown system and either non-standard C or pre-C99!
   This limits the `idx.h` to using the standard
-  library, rendering it fairly pointless since
-  `fseek` and `ftell` are limited to `long int`.
+  library AND being stuck with `unsigned long`,
+  rendering it fairly pointless.
   
   If you would like to use `idx.h` anyway, just
   remove or comment out the `#error` below.
@@ -28,7 +34,7 @@ extern "C" {
   support that idx.h doesn't know about, please
   drop an email or submit a patch. */
 #else
-	#error "System not supported. See idx_t.h for details."
+	#error "System not supported and C std pre-C99."
 	#define IDX_UNKW
 	typedef unsigned long idx_t;
 
